@@ -11,257 +11,240 @@
         :root {
             --stark-blue: #00d2ff;
             --stark-dark: #050a14;
-            --stark-border: rgba(0, 210, 255, 0.3);
-            --stark-glow: rgba(0, 210, 255, 0.15);
+            --stark-border: rgba(0, 210, 255, 0.4);
+            --stark-glow: rgba(0, 210, 255, 0.2);
         }
 
         body {
             background-color: var(--stark-dark);
             background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 40, 80, 0.4) 0%, transparent 80%),
-                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90s, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 100% 100%, 30px 30px, 30px 30px;
+                radial-gradient(circle at 50% 50%, rgba(0, 40, 80, 0.5) 0%, transparent 85%),
+                linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
             color: var(--stark-blue);
             font-family: 'Rajdhani', sans-serif;
             height: 100vh;
             width: 100vw;
             margin: 0;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
-        .hud-container {
-            width: 95%;
-            height: 90%;
-            border: 2px solid var(--stark-border);
-            position: relative;
-            background: rgba(5, 10, 20, 0.8);
-            backdrop-filter: blur(10px);
+        /* Contenedor HUD con corrección de interacción */
+        .hud-frame {
+            width: 96%;
+            height: 92%;
+            border: 1px solid var(--stark-border);
+            background: rgba(5, 12, 24, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
-            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.1), 0 0 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Capas decorativas con pointer-events: none para no bloquear clics */
+        .overlay-fx {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            border: 10px solid transparent;
+            border-image: radial-gradient(circle, var(--stark-blue) 0%, transparent 100%) 1;
+            opacity: 0.1;
         }
 
         .hud-header {
-            padding: 20px;
+            padding: 1.5rem;
             border-bottom: 1px solid var(--stark-border);
+            background: linear-gradient(90deg, rgba(0, 210, 255, 0.05) 0%, transparent 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(90deg, rgba(0, 210, 255, 0.1) 0%, transparent 100%);
         }
 
-        .stark-logo {
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 4px;
-            font-weight: 700;
-            text-shadow: 0 0 10px var(--stark-blue);
-        }
+        .stark-font { font-family: 'Orbitron', sans-serif; }
 
-        #chat-container {
+        #chat-display {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 30px;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1.5rem;
         }
 
-        .message-jarvis {
+        .jarvis-bubble {
             background: rgba(0, 210, 255, 0.05);
-            border-left: 3px solid var(--stark-blue);
-            padding: 15px;
-            max-width: 80%;
-            position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+            border-left: 4px solid var(--stark-blue);
+            padding: 1rem;
+            max-width: 85%;
+            font-size: 1.1rem;
         }
 
-        .message-user {
+        .user-bubble {
             align-self: flex-end;
-            background: rgba(255, 255, 255, 0.05);
-            border-right: 3px solid #fff;
-            padding: 15px;
-            max-width: 80%;
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 4px solid #fff;
+            padding: 1rem;
+            max-width: 85%;
             text-align: right;
-            clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
         }
 
-        .input-area {
-            padding: 25px;
-            background: rgba(0, 0, 0, 0.4);
+        .input-console {
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
             border-top: 1px solid var(--stark-border);
         }
 
-        .stark-input {
-            background: transparent;
-            border: 1px solid var(--stark-border);
-            color: white;
-            padding: 15px 20px;
+        /* Input corregido y priorizado */
+        .command-input {
             width: 100%;
-            outline: none;
+            background: rgba(0, 210, 255, 0.05);
+            border: 1px solid var(--stark-blue);
+            color: #fff;
+            padding: 1rem 1.5rem;
             font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            outline: none;
             transition: all 0.3s;
         }
 
-        .stark-input:focus {
-            box-shadow: 0 0 15px var(--stark-glow);
-            border-color: var(--stark-blue);
+        .command-input:focus {
+            background: rgba(0, 210, 255, 0.15);
+            box-shadow: 0 0 20px var(--stark-glow);
         }
 
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 210, 255, 0.1);
-            position: absolute;
-            animation: scan 4s linear infinite;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .glitch-text {
-            animation: glitch 2s infinite;
-        }
-
-        @keyframes glitch {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-
+        /* Scrollbar estilo Stark */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--stark-blue); }
+
+        .status-tag {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #10b981;
+            text-shadow: 0 0 5px #10b981;
+        }
     </style>
 </head>
 <body>
 
-    <div class="scanline"></div>
+    <div class="hud-frame">
+        <div class="overlay-fx"></div>
 
-    <div class="hud-container">
-        <!-- HEADER -->
         <header class="hud-header">
-            <div class="flex flex-col">
-                <h1 class="stark-logo text-xl">J.A.R.V.I.S.</h1>
-                <span class="text-[10px] tracking-[0.3em] opacity-60">SISTEMA OPERATIVO DE APOYO V.2.0</span>
+            <div>
+                <h1 class="stark-font text-xl tracking-tighter text-white">J.A.R.V.I.S. <span class="text-sky-400">MK III</span></h1>
+                <p class="text-[10px] opacity-50 tracking-[4px]">ESTADO DEL REACTOR: ESTABLE</p>
             </div>
-            <div class="text-right font-mono">
-                <div class="text-xs opacity-50">PROPIEDAD DE STARK INDUSTRIES</div>
-                <div id="clock" class="text-lg font-bold">00:00:00</div>
-                <div class="text-[9px] text-emerald-400">ENLACE NEURAL: CARLOS MANUEL PANAMEÑO MARCENARO</div>
+            <div class="text-right">
+                <div id="clock" class="text-xl font-bold tracking-widest text-white">00:00:00</div>
+                <div class="status-tag">USUARIO: CARLOS_MANUEL_PANAMEÑO_MARCENARO</div>
             </div>
         </header>
 
-        <!-- CHAT -->
-        <div id="chat-container">
-            <div class="message-jarvis">
-                <p class="text-lg">Sistemas reiniciados, Señor Carlos. He purgado los errores de renderizado y optimizado la respuesta visual del HUD. Estamos operando bajo protocolos de seguridad Nivel 10. ¿Cuál es su próximo movimiento?</p>
-                <span class="text-[10px] opacity-40 mt-2 block tracking-widest">SUBRUTINA_INICIO_COMPLETA</span>
+        <main id="chat-display" class="custom-scrollbar">
+            <div class="jarvis-bubble">
+                <p>Señor Carlos, he reconfigurado los protocolos de entrada. He eliminado las capas visuales que obstruían el acceso a la terminal y he simplificado el despliegue para GitHub. Los sistemas están listos para recibir sus órdenes.</p>
+                <span class="text-[9px] opacity-40 mt-2 block tracking-widest">SISTEMA_RECALIBRADO_V3</span>
             </div>
+        </main>
+
+        <div id="loading-bar" class="hidden px-8 py-2 text-[9px] tracking-[5px] animate-pulse text-sky-300 uppercase">
+            Sincronizando con satélites de Stark Industries...
         </div>
 
-        <!-- LOADING -->
-        <div id="loading" class="hidden px-8 py-2 text-[10px] tracking-[0.5em] animate-pulse italic">
-            PROCESANDO DATOS EN NÚCLEO GEMINI...
-        </div>
-
-        <!-- INPUT -->
-        <div class="input-area">
-            <div class="relative flex items-center gap-4">
-                <div class="flex-grow">
-                    <input 
-                        type="text" 
-                        id="user-input" 
-                        placeholder="INGRESE COMANDO..." 
-                        class="stark-input uppercase tracking-widest"
-                        autocomplete="off"
-                    >
-                </div>
-                <button id="send-btn" class="border border-sky-500 p-4 hover:bg-sky-500/20 transition-all active:scale-95">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <section class="input-console">
+            <div class="flex gap-4">
+                <input 
+                    type="text" 
+                    id="user-entry" 
+                    placeholder="INGRESAR COMANDO DE VOZ O TEXTO..." 
+                    class="command-input"
+                    autocomplete="off"
+                >
+                <button id="exec-btn" class="px-8 border border-sky-500 hover:bg-sky-500/20 transition-all active:scale-95 text-sky-400">
+                    EXE
                 </button>
             </div>
-            <div class="mt-4 flex justify-between items-center opacity-40 text-[9px] tracking-widest uppercase">
-                <span>Estado del reactor: Estable</span>
-                <span>Usuario autenticado: ADMIN_CARLOS</span>
-            </div>
-        </div>
+        </section>
     </div>
 
     <script>
         const apiKey = ""; 
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
-        const loading = document.getElementById('loading');
+        const display = document.getElementById('chat-display');
+        const input = document.getElementById('user-entry');
+        const btn = document.getElementById('exec-btn');
+        const loading = document.getElementById('loading-bar');
 
-        // Reloj Stark
-        function tick() {
+        // Actualización de reloj
+        function updateTime() {
             document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-ES', {hour12: false});
         }
-        setInterval(tick, 1000);
-        tick();
+        setInterval(updateTime, 1000);
+        updateTime();
 
-        function appendMessage(role, text) {
+        function addMsg(role, content) {
             const div = document.createElement('div');
-            div.className = role === 'user' ? 'message-user' : 'message-jarvis';
-            div.innerHTML = `<p class="${role === 'user' ? '' : 'text-lg'}">${text}</p>
-                             <span class="text-[9px] opacity-30 mt-2 block tracking-widest uppercase">${role === 'user' ? 'Comando_Entrante' : 'Respuesta_Sistema'}</span>`;
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            div.className = role === 'user' ? 'user-bubble' : 'jarvis-bubble';
+            div.innerHTML = `<p>${content}</p>
+                             <span class="text-[9px] opacity-30 mt-2 block tracking-widest uppercase">${role === 'user' ? 'Carlos_Input' : 'Jarvis_Output'}</span>`;
+            display.appendChild(div);
+            display.scrollTop = display.scrollHeight;
         }
 
-        async function talkToJarvis(prompt) {
+        async function callGemini(query) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
+            const body = {
+                contents: [{ parts: [{ text: query }] }],
                 systemInstruction: { 
-                    parts: [{ text: "Eres J.A.R.V.I.S., la IA de Tony Stark. Tu jefe es el Señor Carlos (Carlos Manuel Panameño Marcenaro). Eres británico, extremadamente educado, eficiente, con un sentido del humor seco. Usa términos como 'Señor', 'Protocolos', 'Sistemas'. Mantén las respuestas claras pero con ese toque de asistente de alta tecnología." }] 
+                    parts: [{ text: "Eres J.A.R.V.I.S., la inteligencia artificial de Tony Stark. Tu jefe es el Señor Carlos (Carlos Manuel Panameño Marcenaro). Tu tono es británico, extremadamente educado, eficiente y ligeramente seco. Llama a tu jefe 'Carlos' o 'Señor'." }] 
                 },
                 tools: [{ "google_search": {} }]
             };
 
             for (let i = 0; i < 5; i++) {
                 try {
-                    const response = await fetch(url, {
+                    const res = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify(body)
                     });
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Anomalía detectada en el flujo de datos.";
+                    const json = await res.json();
+                    return json.candidates?.[0]?.content?.parts?.[0]?.text || "Señor, he perdido la señal del satélite.";
                 } catch (e) {
                     await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
                 }
             }
-            return "Sistemas fuera de línea. Reintente.";
+            return "Sistemas desconectados. Verifique el reactor Ark.";
         }
 
-        async function handleAction() {
-            const val = userInput.value.trim();
-            if(!val) return;
+        async function processInput() {
+            const val = input.value.trim();
+            if (!val) return;
 
-            appendMessage('user', val);
-            userInput.value = '';
+            addMsg('user', val);
+            input.value = '';
             loading.classList.remove('hidden');
 
             try {
-                const resp = await talkToJarvis(val);
-                appendMessage('jarvis', resp);
+                const response = await callGemini(val);
+                addMsg('jarvis', response);
             } finally {
                 loading.classList.add('hidden');
             }
         }
 
-        sendBtn.onclick = handleAction;
-        userInput.onkeydown = (e) => e.key === 'Enter' && handleAction();
+        btn.onclick = processInput;
+        input.onkeydown = (e) => { if(e.key === 'Enter') processInput(); };
+        
+        // Foco automático al cargar
+        window.onload = () => input.focus();
     </script>
 </body>
 </html>
