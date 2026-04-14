@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --glass-bg: rgba(10, 15, 28, 0.85);
+            --glass-bg: rgba(10, 15, 28, 0.9);
             --accent-glow: rgba(56, 189, 248, 0.4);
             --jarvis-blue: #38bdf8;
         }
@@ -15,13 +15,19 @@
             background-color: #020617;
             color: #f8fafc;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; /* Evita scroll en el body para manejarlo en el contenedor de chat */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
         }
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
@@ -33,14 +39,11 @@
             background: rgba(56, 189, 248, 0.2);
             border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(56, 189, 248, 0.5);
-        }
         .message-animation {
-            animation: fadeIn 0.3s ease-out forwards;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .loading-dots::after {
@@ -54,104 +57,91 @@
         }
     </style>
 </head>
-<body class="h-screen w-screen flex items-center justify-center p-0 sm:p-4">
+<body class="p-0 sm:p-6">
 
-    <!-- Contenedor Principal de la Web -->
-    <div class="w-full h-full max-w-5xl flex flex-col glass-panel sm:rounded-3xl overflow-hidden relative border-0 sm:border border-slate-800">
+    <!-- Estructura Principal Optimizada -->
+    <div class="w-full h-full max-w-6xl flex flex-col glass-panel sm:rounded-3xl overflow-hidden relative border-slate-800">
         
-        <!-- Barra de Estado Superior -->
-        <header class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/40">
-            <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-full border border-sky-500/50 flex items-center justify-center bg-sky-950/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="text-sky-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+        <!-- Cabecera de Sistema -->
+        <header class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-12 rounded-full border border-sky-500/40 flex items-center justify-center bg-sky-950/20 shadow-[0_0_15px_rgba(56,189,248,0.2)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-sky-400" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
                 </div>
                 <div>
-                    <h2 class="text-sm font-bold tracking-widest text-sky-400 uppercase">Jarvis Core</h2>
-                    <p class="text-[10px] text-slate-500 font-mono">ENLACE NEURAL ESTABLECE - BIENVENIDO CARLOS</p>
+                    <h2 class="text-base font-black tracking-widest text-sky-400 uppercase">Jarvis Core</h2>
+                    <p class="text-[10px] text-slate-500 font-mono tracking-tighter">IDENTIDAD CONFIRMADA: CARLOS MANUEL PANAMEÑO MARCENARO</p>
                 </div>
             </div>
-            <div class="hidden md:flex flex-col items-end">
-                <span class="text-[10px] text-slate-500 font-mono uppercase tracking-tighter">Latencia: 24ms</span>
-                <span id="system-clock" class="text-xs text-slate-300 font-mono">00:00:00</span>
+            <div class="hidden md:flex flex-col items-end font-mono">
+                <span id="system-clock" class="text-sm text-sky-200">00:00:00</span>
+                <span class="text-[9px] text-emerald-500 animate-pulse">SISTEMA ONLINE</span>
             </div>
         </header>
 
-        <!-- Espacio de Comunicación (Chat) -->
-        <div id="chat-container" class="flex-grow overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar">
-            <!-- Mensaje de Inicio -->
+        <!-- Área de Visualización de Datos (Chat) -->
+        <div id="chat-container" class="flex-grow overflow-y-auto p-8 flex flex-col gap-6 custom-scrollbar bg-gradient-to-b from-transparent to-slate-950/20">
             <div class="message-animation flex justify-start w-full">
-                <div class="bg-slate-900/60 text-slate-200 p-4 rounded-2xl rounded-tl-none border border-slate-800 max-w-[85%] sm:max-w-[70%] shadow-xl">
+                <div class="bg-slate-900/80 text-slate-200 p-5 rounded-2xl rounded-tl-none border border-slate-700/50 max-w-[80%] shadow-2xl backdrop-blur-sm">
                     <p class="text-sm leading-relaxed">
-                        Sistemas cargados. Todos los parámetros se encuentran dentro de los márgenes operativos, Señor. 
-                        La inteligencia de Gemini ha sido integrada en mis protocolos. ¿Cómo desea proceder hoy, Carlos?
+                        Señor Carlos, he recalibrado los parámetros de visualización. Los errores de renderizado previos han sido aislados y eliminados. ¿En qué puedo asistirle en esta sesión?
                     </p>
-                    <span class="text-[9px] text-slate-500 mt-2 block font-mono">JARVIS • AHORA</span>
+                    <span class="text-[10px] text-slate-500 mt-3 block font-mono font-bold italic">JARVIS PROTOCOL • ONLINE</span>
                 </div>
             </div>
         </div>
 
-        <!-- Indicador de Proceso -->
-        <div id="loading-indicator" class="hidden px-8 py-2">
-            <div class="flex items-center gap-2 text-sky-400 text-[10px] font-mono uppercase tracking-widest">
-                <span class="inline-block w-2 h-2 bg-sky-500 rounded-full animate-pulse"></span>
-                Sincronizando con el Núcleo<span class="loading-dots"></span>
+        <!-- Feedback de Procesamiento -->
+        <div id="loading-indicator" class="hidden px-8 py-3 bg-slate-900/30">
+            <div class="flex items-center gap-3 text-sky-400 text-[11px] font-mono tracking-widest">
+                <div class="flex gap-1">
+                    <div class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce"></div>
+                    <div class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                </div>
+                ANALIZANDO SOLICITUD<span class="loading-dots"></span>
             </div>
         </div>
 
-        <!-- Consola de Entrada -->
-        <footer class="p-6 bg-slate-950/60 border-t border-slate-800">
-            <div class="relative max-w-4xl mx-auto flex items-end gap-3">
-                <div class="flex-grow relative">
+        <!-- Terminal de Comandos -->
+        <footer class="p-6 bg-slate-950/80 border-t border-slate-800 shadow-[0_-10px_20px_rgba(0,0,0,0.2)]">
+            <div class="relative max-w-4xl mx-auto flex items-center gap-4">
+                <div class="flex-grow">
                     <textarea 
                         id="user-input"
                         rows="1"
-                        placeholder="Escriba un comando para Jarvis..."
-                        class="w-full bg-slate-900/80 border border-slate-700 rounded-2xl py-4 px-5 pr-12 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-sky-500/50 transition-all resize-none shadow-inner"
+                        placeholder="Ingrese comando de voz o texto..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-4 px-6 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/20 transition-all resize-none shadow-inner"
                     ></textarea>
-                    <div class="absolute right-4 bottom-4 text-[10px] text-slate-600 font-mono hidden sm:block">
-                        SHIFT + ENTER PARA LÍNEA
-                    </div>
                 </div>
                 <button 
                     id="send-btn"
-                    class="bg-sky-600 hover:bg-sky-500 text-white p-4 rounded-2xl transition-all shadow-lg hover:shadow-sky-500/20 active:scale-95 flex items-center justify-center group"
+                    class="bg-sky-600 hover:bg-sky-500 text-white w-14 h-14 rounded-xl transition-all shadow-lg hover:shadow-sky-500/40 active:scale-90 flex items-center justify-center group border border-sky-400/20"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
             </div>
-            <div class="mt-4 text-center">
-                <p class="text-[10px] text-slate-600 uppercase tracking-[0.3em] font-medium">Terminal de Acceso Restringido - Carlos Manuel Panameño Marcenaro</p>
-            </div>
+            <p class="mt-4 text-center text-[10px] text-slate-700 font-mono tracking-widest">AUTENTICACIÓN BIOMÉTRICA REQUERIDA • NIVEL DE ACCESO: ADMINISTRADOR</p>
         </footer>
     </div>
 
     <script>
-        // Configuración de Identidad y API
         const apiKey = ""; 
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const loadingIndicator = document.getElementById('loading-indicator');
 
-        // Reloj del sistema
         function updateClock() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('es-ES', { hour12: false });
-            document.getElementById('system-clock').textContent = timeString;
+            document.getElementById('system-clock').textContent = now.toLocaleTimeString('es-ES', { hour12: false });
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Auto-expandir textarea
         userInput.addEventListener('input', function() {
             this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-            if(this.scrollHeight > 150) {
-                this.style.overflowY = 'auto';
-                this.style.height = '150px';
-            } else {
-                this.style.overflowY = 'hidden';
-            }
+            this.style.height = (Math.min(this.scrollHeight, 120)) + 'px';
         });
 
         function appendMessage(role, text) {
@@ -161,13 +151,19 @@
             const timestamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
             
             const bubbleHtml = role === 'user' 
-                ? `<div class="bg-sky-700 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] sm:max-w-[70%] text-sm shadow-xl border border-sky-600/50">
-                    <p class="leading-relaxed">${text}</p>
-                    <span class="text-[9px] text-sky-200 mt-2 block font-mono text-right">CARLOS • ${timestamp}</span>
+                ? `<div class="bg-sky-600/90 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] sm:max-w-[75%] text-sm shadow-xl border border-sky-400/30 backdrop-blur-sm">
+                    <p class="leading-relaxed font-medium">${text}</p>
+                    <div class="flex items-center justify-end gap-1 mt-2">
+                        <span class="text-[9px] text-sky-100 font-mono">CARLOS</span>
+                        <span class="text-[8px] text-sky-200/60 font-mono">• ${timestamp}</span>
+                    </div>
                    </div>`
-                : `<div class="bg-slate-900/60 text-slate-200 p-4 rounded-2xl rounded-tl-none max-w-[85%] sm:max-w-[70%] text-sm border border-slate-800 shadow-xl">
+                : `<div class="bg-slate-900/80 text-slate-200 p-5 rounded-2xl rounded-tl-none max-w-[85%] sm:max-w-[75%] text-sm border border-slate-700/50 shadow-2xl backdrop-blur-md">
                     <p class="leading-relaxed">${text}</p>
-                    <span class="text-[9px] text-slate-500 mt-2 block font-mono uppercase">JARVIS • ${timestamp}</span>
+                    <div class="flex items-center gap-1 mt-3">
+                        <span class="text-[9px] text-slate-500 font-mono font-bold">JARVIS</span>
+                        <span class="text-[8px] text-slate-600 font-mono">• ${timestamp}</span>
+                    </div>
                    </div>`;
             
             wrapper.innerHTML = bubbleHtml;
@@ -177,7 +173,6 @@
 
         async function fetchGemini(prompt, retries = 5, delay = 1000) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { 
@@ -186,18 +181,16 @@
                 tools: [{ "google_search": {} }]
             };
 
-            for (let i = 0; i < retries; i++) {
+            for (let i = i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-
                     if (!response.ok) throw new Error(`Status: ${response.status}`);
-                    
                     const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Señor, el núcleo de procesamiento no ha devuelto una respuesta válida.";
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Error en el flujo de datos.";
                 } catch (error) {
                     if (i === retries - 1) throw error;
                     await new Promise(r => setTimeout(r, delay));
@@ -219,8 +212,7 @@
                 const aiResponse = await fetchGemini(text);
                 appendMessage('jarvis', aiResponse);
             } catch (error) {
-                appendMessage('jarvis', "Mis disculpas, Carlos. He detectado una anomalía en los enlaces externos. Sugiero un reintento manual.");
-                console.error("Error de comunicación:", error);
+                appendMessage('jarvis', "Anomalía detectada. El enlace con el servidor central ha fallado, Señor.");
             } finally {
                 loadingIndicator.classList.add('hidden');
             }
