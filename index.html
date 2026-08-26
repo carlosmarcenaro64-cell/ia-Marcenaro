@@ -3,243 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. - STARK INDUSTRIES MK VII</title>
+    <title>Sistema de Llamados - Hospital</title>
+    <!-- Tailwind CSS para diseño moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap');
-
-        :root {
-            --stark-blue: #00d2ff;
-            --stark-dark: #02050a;
-            --stark-border: rgba(0, 210, 255, 0.6);
+        body { font-family: 'Inter', sans-serif; }
+        .pulse-soft {
+            animation: pulseSoft 2s infinite;
         }
-
-        /* Bloqueo de colapso con sistema GRID */
-        html, body {
-            height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-            background-color: var(--stark-dark);
-            overflow: hidden;
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--stark-blue);
+        @keyframes pulseSoft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
-
-        /* Estructura GRID: Header (80px), Chat (Flexible), Input (120px) */
-        .app-wrapper {
-            display: grid;
-            grid-template-rows: 80px 1fr 120px;
-            height: 100vh;
-            width: 100vw;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 40, 80, 0.3) 0%, transparent 80%),
-                linear-gradient(rgba(0, 210, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 210, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-        }
-
-        .hud-header {
-            background: rgba(2, 5, 10, 0.95);
-            border-bottom: 2px solid var(--stark-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            z-index: 10;
-        }
-
-        .chat-container {
-            overflow-y: auto;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 1;
-        }
-
-        .bubble {
-            padding: 18px;
-            max-width: 75%;
-            border-radius: 4px;
-            font-size: 1.1rem;
-            line-height: 1.4;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .jarvis-msg {
-            background: rgba(0, 210, 255, 0.08);
-            border-left: 5px solid var(--stark-blue);
-            align-self: flex-start;
-            color: #fff;
-        }
-
-        .user-msg {
-            background: rgba(255, 255, 255, 0.05);
-            border-right: 5px solid #ffffff;
-            align-self: flex-end;
-            text-align: right;
-            color: var(--stark-blue);
-        }
-
-        .input-console {
-            background: #000;
-            border-top: 2px solid var(--stark-border);
-            display: flex;
-            align-items: center;
-            padding: 0 40px;
-            z-index: 10;
-        }
-
-        .input-box {
-            display: flex;
-            width: 100%;
-            height: 60px;
-            gap: 15px;
-        }
-
-        .stark-input {
-            flex: 1;
-            height: 100%;
-            background: rgba(0, 210, 255, 0.05);
-            border: 2px solid var(--stark-blue);
-            color: white;
-            padding: 0 25px;
-            font-size: 1.2rem;
-            font-family: 'Rajdhani', sans-serif;
-            outline: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            pointer-events: auto; /* Garantizamos interacción */
-        }
-
-        .stark-input:focus {
-            background: rgba(0, 210, 255, 0.15);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
-        }
-
-        .exe-button {
-            width: 130px;
-            height: 100%;
-            background: transparent;
-            border: 2px solid var(--stark-blue);
-            color: var(--stark-blue);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .exe-button:hover {
-            background: var(--stark-blue);
-            color: black;
-        }
-
-        .tag {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            letter-spacing: 3px;
-            color: var(--stark-blue);
-            margin-top: 8px;
-            display: block;
-            opacity: 0.7;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--stark-blue); }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
-    <div class="app-wrapper">
-        <header class="hud-header">
-            <div>
-                <h1 style="font-family: 'Orbitron'" class="text-2xl font-bold text-white tracking-[4px]">J.A.R.V.I.S. <span class="text-sky-400">MK VII</span></h1>
-                <p class="text-[10px] text-emerald-400 font-bold uppercase">Estado: Estabilidad por Rejilla</p>
-            </div>
-            <div class="text-right">
-                <div id="clock" class="text-2xl font-bold text-white">00:00:00</div>
-                <div class="text-[9px] text-sky-300 font-mono">ADMIN: CARLOS MANUEL PANAMEÑO MARCENARO</div>
-            </div>
-        </header>
-
-        <main id="chat-display" class="chat-container">
-            <div class="bubble jarvis-msg">
-                <p>Señor Carlos, he reconfigurado la matriz del sistema. He abandonado el posicionamiento absoluto que causaba la obstrucción de capas en su terminal. Ahora, cada sección tiene su propio espacio físico en el flujo de datos. ¿Es la respuesta del teclado satisfactoria ahora?</p>
-                <span class="tag">PROTOCOLO_GRID_V7</span>
-            </div>
-        </main>
-
-        <footer class="input-console">
-            <div class="input-box">
-                <input 
-                    type="text" 
-                    id="user-input" 
-                    placeholder="INTRODUZCA ÓRDENES, SEÑOR..." 
-                    class="stark-input"
-                    autocomplete="off"
-                >
-                <button id="send-btn" class="exe-button">EXE</button>
-            </div>
-        </footer>
+    <div id="app" class="flex-1 flex flex-col">
+        <!-- Contenido dinámico inyectado por JS -->
     </div>
 
     <script>
-        const apiKey = ""; 
-        const chatDisplay = document.getElementById('chat-display');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
+        // Usamos BroadcastChannel y localStorage para sincronizar Celular y TV en tiempo real
+        const channel = new BroadcastChannel('hospital_llamados_channel');
 
-        function updateClock() {
-            document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-ES', {hour12: false});
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        let state = {
+            view: 'selector', // 'selector', 'operator', 'tv'
+            currentCall: {
+                ticket: '---',
+                location: 'Seleccione un destino',
+                time: '--:--'
+            },
+            history: []
+        };
 
-        function appendMessage(role, text) {
-            const div = document.createElement('div');
-            div.className = `bubble ${role === 'user' ? 'user-msg' : 'jarvis-msg'}`;
-            div.innerHTML = `<p>${text}</p><span class="tag">${role === 'user' ? 'CARLOS_ENTRY' : 'JARVIS_OUTPUT'}</span>`;
-            chatDisplay.appendChild(div);
-            chatDisplay.scrollTop = chatDisplay.scrollHeight;
-        }
+        let audioCtx = null;
 
-        async function fetchResponse(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const body = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: "Eres J.A.R.V.I.S., la IA de Tony Stark. Tu jefe es Carlos Manuel Panameño Marcenaro. Eres británico, eficiente y formal. Respuestas breves." }] }
-            };
-
-            const response = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
-        }
-
-        async function processCommand() {
-            const val = userInput.value.trim();
-            if(!val) return;
-
-            appendMessage('user', val);
-            userInput.value = '';
-
-            try {
-                const response = await fetchResponse(val);
-                appendMessage('jarvis', response);
-            } catch(e) {
-                appendMessage('jarvis', "Señor, he detectado una interrupción en el enlace de datos.");
-            } finally {
-                userInput.focus();
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        sendBtn.onclick = processCommand;
-        userInput.onkeydown = (e) => e.key === 'Enter' && processCommand();
-        
-        window.onload = () => userInput.focus();
+        function loadState() {
+            const savedState = localStorage.getItem('hospital_call_state');
+            if (savedState) {
+                try {
+                    state = JSON.parse(savedState);
+                } catch(e) { console.error(e); }
+            }
+        }
+
+        function saveAndBroadcastState() {
+            localStorage.setItem('hospital_call_state', JSON.stringify(state));
+            channel.postMessage(state);
+        }
+
+        channel.onmessage = (event) => {
+            const oldTicket = state.currentCall.ticket;
+            state = event.data;
+            if (state.view === 'tv') {
+                renderTV();
+                if (state.currentCall.ticket !== '---' && state.currentCall.ticket !== oldTicket) {
+                    playChimeAndSpeak(state.currentCall.ticket, state.currentCall.location);
+                }
+            } else if (state.view === 'operator') {
+                renderOperator();
+            }
+        };
+
+        function renderSelector() {
+            const app = document.getElementById('app');
+            app.className = "flex-1 flex items-center justify-center p-4 md:p-6 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950";
+            app.innerHTML = `
+                <div class="max-w-4xl w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700 p-6 md:p-12 rounded-3xl shadow-2xl text-center">
+                    <div class="inline-flex items-center justify-center p-4 bg-blue-600/20 text-blue-400 rounded-2xl mb-6 shadow-inner">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <h1 class="text-2xl md:text-5xl font-black text-white tracking-tight mb-4">Sistema de Gestión de Turnos</h1>
+                    <p class="text-slate-400 text-sm md:text-lg mb-8 max-w-xl mx-auto">Selecciona cómo deseas usar este dispositivo en este momento.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button onclick="setMode('operator')" class="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-6 md:p-8 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left flex flex-col justify-between border border-blue-400/30">
+                            <div>
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4 text-2xl">📱</div>
+                                <h3 class="text-xl md:text-2xl font-bold mb-2">Control Remoto (Celular)</h3>
+                                <p class="text-blue-100 text-xs md:text-sm opacity-90">Ideal para llevar en el teléfono y dictar los turnos rápidamente.</p>
+                            </div>
+                            <div class="mt-6 flex items-center text-sm font-semibold text-blue-200 group-hover:translate-x-2 transition-transform">
+                                Abrir Control Celular &rarr;
+                            </div>
+                        </button>
+
+                        <button onclick="setMode('tv')" class="group relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white p-6 md:p-8 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 text-left flex flex-col justify-between border border-emerald-400/30">
+                            <div>
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4 text-2xl">📺</div>
+                                <h3 class="text-xl md:text-2xl font-bold mb-2">Pantalla de Sala (TV / Monitor)</h3>
+                                <p class="text-emerald-100 text-xs md:text-sm opacity-90">Para la pantalla gigante en la sala de espera. Muestra turnos y emite sonidos.</p>
+                            </div>
+                            <div class="mt-6 flex items-center text-sm font-semibold text-emerald-200 group-hover:translate-x-2 transition-transform">
+                                Iniciar Pantalla TV &rarr;
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setMode(mode) {
+            initAudio();
+            state.view = mode;
+            saveAndBroadcastState();
+            if (mode === 'operator') renderOperator();
+            else renderTV();
+        }
+
+        let currentSelectedDestination = 'Área: Selección de Pacientes';
+
+        function renderOperator() {
+            const app = document.getElementById('app');
+            app.className = "flex-1 flex flex-col bg-slate-900 p-3 md:p-6 max-w-2xl mx-auto w-full";
+            
+            let consultoriosOptions = `<option value="Área: Selección de Pacientes" ${currentSelectedDestination === 'Área: Selección de Pacientes' ? 'selected' : ''}>📋 Área: Selección de Pacientes</option>`;
+            for(let i = 1; i <= 12; i++) {
+                const name = `Consultorio ${i < 10 ? '0'+i : i}`;
+                consultoriosOptions += `<option value="${name}" ${currentSelectedDestination === name ? 'selected' : ''}>🚪 ${name}</option>`;
+            }
+
+            app.innerHTML = `
+                <!-- Cabecera del Control Celular -->
+                <header class="flex justify-between items-center bg-slate-800 border border-slate-700 px-4 py-3 rounded-2xl shadow-lg mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-2xl">📱</span>
+                        <div>
+                            <h2 class="text-base font-bold text-white">Control Remoto</h2>
+                            <p class="text-[10px] text-emerald-400 font-medium">● Sincronizado</p>
+                        </div>
+                    </div>
+                    <button onclick="setMode('selector')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-xs font-semibold">
+                        Menú
+                    </button>
+                </header>
+
+                <!-- Panel Principal de Control Móvil -->
+                <div class="space-y-4 flex-1 flex flex-col justify-between">
+                    <div class="bg-slate-800/90 border border-slate-700 p-4 md:p-6 rounded-2xl shadow-xl space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">1. Número de Turno / Paciente</label>
+                            <input type="text" id="ticketInput" placeholder="Ej. A-012" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-xl font-black uppercase focus:outline-none focus:border-blue-500 tracking-wider">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">2. Destino / Consultorio</label>
+                            <select id="mobileDestSelect" onchange="currentSelectedDestination = this.value" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-white font-bold text-base focus:outline-none focus:border-blue-500">
+                                ${consultoriosOptions}
+                            </select>
+                        </div>
+
+                        <button onclick="callCurrent()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center space-x-2 text-lg">
+                            <span>📢 LLAMAR TURNO AHORA</span>
+                        </button>
+                    </div>
+
+                    <!-- Turno actual en curso visto desde el celular -->
+                    <div class="bg-slate-800/60 border border-slate-700/80 p-4 rounded-2xl">
+                        <span class="text-xs text-slate-400 block mb-1">Último turno enviado:</span>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-black text-white" id="activeTicketDisplay">${state.currentCall.ticket}</span>
+                            <span class="text-xs bg-blue-600/30 text-blue-300 px-3 py-1 rounded-lg font-semibold" id="activeLocationDisplay">${state.currentCall.location}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function callCurrent() {
+            const ticketInput = document.getElementById('ticketInput');
+            const ticketVal = ticketInput.value.trim();
+
+            if (!ticketVal) {
+                showNotification("Ingrese el número de turno", "error");
+                return;
+            }
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (state.currentCall.ticket !== '---') {
+                state.history.unshift(state.currentCall);
+                if (state.history.length > 3) state.history.pop();
+            }
+
+            state.currentCall = {
+                ticket: ticketVal.toUpperCase(),
+                location: currentSelectedDestination,
+                time: timeString
+            };
+
+            saveAndBroadcastState();
+            showNotification(`¡Turno ${ticketVal.toUpperCase()} enviado con éxito!`, "success");
+            
+            ticketInput.value = '';
+            ticketInput.focus();
+            
+            const activeT = document.getElementById('activeTicketDisplay');
+            const activeL = document.getElementById('activeLocationDisplay');
+            if(activeT) activeT.innerText = state.currentCall.ticket;
+            if(activeL) activeL.innerText = state.currentCall.location;
+        }
+
+        function renderTV() {
+            const app = document.getElementById('app');
+            app.className = "flex-1 flex flex-col bg-slate-950 text-white p-6 justify-between overflow-hidden";
+            
+            const validHistory = state.history.filter(h => h.ticket && h.ticket !== '---');
+            let historyHTML = '';
+            if (validHistory.length === 0) {
+                historyHTML = `<div class="text-slate-500 text-sm italic col-span-3 text-center py-2">Sin llamados previos registrados en la sesión actual.</div>`;
+            } else {
+                historyHTML = validHistory.slice(0, 3).map(item => `
+                    <div class="bg-slate-800/90 border border-slate-700/60 rounded-xl p-3 flex justify-between items-center">
+                        <div>
+                            <div class="text-xl font-black text-white">${item.ticket}</div>
+                            <div class="text-xs text-slate-400 truncate max-w-[180px]">${item.location}</div>
+                        </div>
+                        <div class="text-xs text-slate-500 font-mono">${item.time}</div>
+                    </div>
+                `).join('');
+            }
+
+            app.innerHTML = `
+                <header class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-blue-600 text-white font-black px-4 py-2 rounded-xl text-xl shadow-lg">HMQ</div>
+                        <div>
+                            <h1 class="text-2xl font-bold tracking-tight">Sala de Espera - Consultorios Médicos</h1>
+                            <p class="text-slate-400 text-sm">Por favor manténgase atento a su turno</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div id="tvClock" class="text-3xl font-black text-blue-400">00:00:00</div>
+                        <button onclick="setMode('selector')" class="text-xs text-slate-500 hover:text-slate-300 mt-1">Configuración / Salir</button>
+                    </div>
+                </header>
+
+                <div class="my-auto py-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900 border-2 border-blue-500/50 rounded-3xl p-8 lg:p-12 shadow-2xl pulse-soft">
+                        <div class="text-center lg:text-left border-b lg:border-b-0 lg:border-r border-blue-500/30 pb-6 lg:pb-0 lg:pr-8">
+                            <span class="text-blue-400 font-bold tracking-widest uppercase text-sm md:text-base block mb-2">TURNO ACTUAL</span>
+                            <div class="text-6xl md:text-8xl font-black text-white tracking-wider drop-shadow-lg">
+                                ${state.currentCall.ticket}
+                            </div>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm md:text-base block mb-2">DESTINO / CONSULTORIO</span>
+                            <div class="text-4xl md:text-6xl font-black text-emerald-300 drop-shadow-lg leading-tight">
+                                ${state.currentCall.location}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center">
+                        <span class="w-2 h-2 bg-slate-500 rounded-full inline-block mr-2"></span>
+                        Últimos Llamados Recientes
+                    </h3>
+                    <div id="tvHistoryList" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        ${historyHTML}
+                    </div>
+                </footer>
+            `;
+            startClock();
+        }
+
+        function startClock() {
+            const clockEl = document.getElementById('tvClock');
+            if (clockEl) {
+                clockEl.innerText = new Date().toLocaleTimeString();
+            }
+        }
+
+        setInterval(startClock, 1000);
+
+        function playChimeAndSpeak(ticket, location) {
+            initAudio();
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.8);
+
+                setTimeout(() => {
+                    if ('speechSynthesis' in window) {
+                        window.speechSynthesis.cancel();
+                        const utterance = new SpeechSynthesisUtterance(`Turno ${ticket}, diríjase a ${location}`);
+                        utterance.lang = 'es-ES';
+                        utterance.rate = 0.9;
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }, 900);
+            } catch(e) { console.error(e); }
+        }
+
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.className = `fixed bottom-6 right-6 z-50 px-6 py-4 rounded-2xl shadow-2xl text-white font-bold flex items-center space-x-3 transition-all transform translate-y-10 opacity-0 ${type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'}`;
+            notif.innerHTML = `<span>${type === 'error' ? '⚠️' : '✅'}</span><span>${message}</span>`;
+            document.body.appendChild(notif);
+
+            setTimeout(() => { notif.classList.remove('translate-y-10', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                notif.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'hospital_call_state') {
+                const oldTicket = state.currentCall.ticket;
+                loadState();
+                if (state.view === 'tv') {
+                    renderTV();
+                    if (state.currentCall.ticket !== '---' && state.currentCall.ticket !== oldTicket) {
+                        playChimeAndSpeak(state.currentCall.ticket, state.currentCall.location);
+                    }
+                }
+            }
+        });
+
+        window.onload = function() {
+            loadState();
+            if (state.view === 'operator') {
+                renderOperator();
+            } else if (state.view === 'tv') {
+                renderTV();
+            } else {
+                renderSelector();
+            }
+        }
     </script>
 </body>
 </html>
+
